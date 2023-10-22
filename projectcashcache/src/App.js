@@ -1,24 +1,34 @@
-import logo from "./logo.svg";
+import { Route, Routes } from "react-router-dom";
 import "./App.css";
+import Home from "./components/Home";
+import NavBar from "./components/NavBar";
+import Profile from "./components/Profile";
+import Register from "./components/Register";
+import LogIn from "./components/LogIn";
+import { useEffect, useState } from "react";
+import { checkToken } from "./api/auth";
+import UserContext from "./context/UserContext";
+import Footer from "./components/Footer";
 
 function App() {
+  const [user, setUser] = useState(false);
+  useEffect(() => {
+    setUser(checkToken());
+  }, []);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React يا هلا ومرحبا
-        </a>
-      </header>
-    </div>
+    <UserContext.Provider value={{ user, setUser }}>
+      <div className="flex flex-col justify-center w-2/3 mx-auto">
+        <NavBar />
+        <Routes>
+          <Route path="/" Component={Home} />
+          <Route path="/register" Component={Register} />
+          <Route path="/myprofile" Component={Profile} />
+          <Route path="/login" Component={LogIn} />
+        </Routes>
+        <Footer />
+      </div>
+    </UserContext.Provider>
   );
 }
 
